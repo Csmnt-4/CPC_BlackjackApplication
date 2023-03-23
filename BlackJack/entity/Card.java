@@ -1,13 +1,17 @@
+package entity;
+
 enum Suit {Clubs, Diamonds, Hearts, Spades}
 
 enum Rank {Jack, Queen, King, Ace}
 
 public class Card {
-    private String imagePath;
+    private String imagePath;   // TODO: Decide if I need the path right here
     private String cardName;
     private int rankValue;
     private Rank rank;
     private Suit suit;
+
+    // TODO: Add more properties. Maybe.
 
     public Card(int value, int suit) throws Exception {
         switch (value) {
@@ -66,11 +70,13 @@ public class Card {
     }
 
     public void setImagePath() {
+        String path = "card_";
         if (this.rank != null) {
-            this.imagePath = this.rank.toString() + this.suit.toString();
+            path += this.suit.toString().toLowerCase() + "_" + this.rank.toString().indexOf(0);
+        } else if (this.rankValue < 10){
+            path += this.suit.toString().toLowerCase() + "_0" + this.rankValue ;
         } else {
-            this.imagePath = this.rankValue + this.suit.toString();
-
+            path += this.suit.toString().toLowerCase() + "_" +  this.rankValue;
         }
     }
 
