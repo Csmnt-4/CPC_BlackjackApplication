@@ -19,8 +19,9 @@ public class ImageRenderer extends DefaultTableCellRenderer {
         if (value instanceof BufferedImage) {
             setIcon(new ImageIcon((BufferedImage) value));
             setText(null);
-        } else {
-            setText("Bad Image");
+        } else if (value instanceof ImageIcon) {
+            setIcon((ImageIcon) value);
+            setText(null);
         }
         return this;
     }

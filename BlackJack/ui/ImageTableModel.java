@@ -1,5 +1,8 @@
 package ui;
 
+import entity.Card;
+import entity.Deck;
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.image.BufferedImage;
@@ -8,11 +11,11 @@ import java.util.List;
 
 public class ImageTableModel extends AbstractTableModel {
 
-    private List<Icon> icons = new ArrayList<>(25);
+    private List<Icon> icons = new ArrayList<>();
+    private List<Card> cards = new ArrayList<>();
 
-
-    public void add(BufferedImage image) {
-        icons.add(new ImageIcon(image));
+    public void add(ImageIcon image) {
+        icons.add(image);
         fireTableRowsInserted(icons.size() - 1, icons.size() - 1);
     }
 
@@ -39,5 +42,20 @@ public class ImageTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
         return "Card";
+    }
+    public List<Icon> getIcons() {
+        return icons;
+    }
+
+    public void setIcons(List<Icon> icons) {
+        this.icons = icons;
+    }
+
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(List<Card> cards) {
+        this.cards = cards;
     }
 }
