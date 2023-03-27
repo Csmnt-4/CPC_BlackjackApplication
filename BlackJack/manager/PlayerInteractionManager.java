@@ -52,23 +52,17 @@ public class PlayerInteractionManager {
 						if (user.getBalance() >= bet) {
 							if (dealer.getBalance() >= bet) {
 								game.getPlayerBetButton().setEnabled(false);
-								int i = 0;
+								int i = 4;
 								boolean instantWin = false;
 								boolean bothPlayersBusted = false;
 								String additionalMessage = "";
 								game.getTableBetLabel().setText("Current bet: " + bet + "$!");
 								user.setBalance(user.getBalance() - bet);
 								dealer.setBalance(dealer.getBalance() - bet);
-								System.out.println("_____________________________");
-								deck.getCards().forEach(card -> System.out.println(card.getCardName()));
-								dealer.addCard(game, deck, i);
-								i++;
-								dealer.addCard(game, deck, i, false);
-								i++;
-								user.addCard(game, deck, i);
-								i++;
-								user.addCard(game, deck, i);
-								i++;
+								dealer.addCard(game, deck, 1);
+								dealer.addCard(game, deck, 2, false);
+								user.addCard(game, deck, 3);
+								user.addCard(game, deck, 4);
 
 								if (user.getCardsValue() == 21) {
 									game.getTableBetLabel().setText("You have a Blackjack!");
