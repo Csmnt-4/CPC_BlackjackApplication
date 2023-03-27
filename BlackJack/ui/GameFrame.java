@@ -41,7 +41,7 @@ public class GameFrame extends JFrame {
     private boolean hit;
     private boolean pass;
 
-    public GameFrame() {
+    public GameFrame() throws Exception {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 550, 350);
         setLocation(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - 550 / 2, Toolkit.getDefaultToolkit().getScreenSize().height / 2 - 350 / 2);
@@ -60,7 +60,7 @@ public class GameFrame extends JFrame {
 
             manager.gameLoop(this);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
@@ -151,10 +151,11 @@ public class GameFrame extends JFrame {
         playerBetPane.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         playerBetTextField = new JTextField();
+        playerBetTextField.setPreferredSize(new Dimension(50,21));
         playerBetPane.add(playerBetTextField);
-        playerBetTextField.setColumns(5);
 
         playerBetButton = new JButton("Bet");
+        playerBetButton.setPreferredSize(new Dimension(55,23));
         playerBetButton.setHorizontalAlignment(SwingConstants.LEFT);
         playerBetButton.addActionListener(e -> setBet(true));
         playerBetPane.add(playerBetButton);
@@ -163,6 +164,7 @@ public class GameFrame extends JFrame {
         playerPanel.add(hitOrPassPane);
         hitOrPassPane.setLayout(new FlowLayout(FlowLayout.CENTER));
         hitButton = new JButton("Hit");
+        hitButton.setPreferredSize(new Dimension(55,23));
         hitButton.addActionListener(e -> setHit(true));
         hitButton.setEnabled(false);
         hitButton.setHorizontalAlignment(SwingConstants.LEADING);
@@ -170,17 +172,20 @@ public class GameFrame extends JFrame {
         hitOrPassPane.add(hitButton);
 
         standButton = new JButton("Stand");
-        hitOrPassPane.add(standButton);
+        standButton.setPreferredSize(new Dimension(70,23));
         standButton.setHorizontalAlignment(SwingConstants.LEFT);
         standButton.setActionCommand("Cancel");
         standButton.addActionListener(e -> setPass(true));
         standButton.setEnabled(false);
+        hitOrPassPane.add(standButton);
 
         JPanel playerCardsValuePane = initializePane();
+        playerCardsValuePane.setPreferredSize(new Dimension(130,30));
         playerPanel.add(playerCardsValuePane);
 
         JLabel playerCardsLabel = new JLabel("Cards value:");
         playerCardsLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        playerCardsLabel.setPreferredSize(new Dimension(90,15));
         playerCardsValuePane.add(playerCardsLabel);
 
         playerCardsValueLabel = new JLabel("0");
@@ -202,9 +207,11 @@ public class GameFrame extends JFrame {
         dealerBalancePane.add(dealerBalanceValueLabel);
 
         JPanel dealerCardsValuePane = initializePane();
+        dealerCardsValuePane.setPreferredSize(new Dimension(150,30));
         dealerPane.add(dealerCardsValuePane);
 
         JLabel dealerCardsLabel = new JLabel("Cards value:");
+        dealerCardsLabel.setPreferredSize(new Dimension(90,15));
         dealerCardsLabel.setHorizontalAlignment(SwingConstants.LEFT);
         dealerCardsValuePane.add(dealerCardsLabel);
 
@@ -303,7 +310,7 @@ public class GameFrame extends JFrame {
         this.pass = pass;
     }
 
-    public void setInvisibleCardToTable(Deck deck) {
+    public void setInvisibleCardToTable(Deck deck) throws Exception{
         this.getPlayerTableModel().add(deck.getCardIcon(deck.getCards().get(0).getCardName()));
         this.getPlayerCardsTable().setModel(this.getPlayerTableModel());
         this.getPlayerCardsTable().setMaximumSize(new Dimension(0, 100));

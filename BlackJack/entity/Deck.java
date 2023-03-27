@@ -75,6 +75,7 @@ public class Deck {
     public ImageIcon getCardIcon(String cardName) {
         return cardIconsMap.get(cardName);
     }
+
     private InputStream getFileFromResourceAsStream(String fileName) {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(fileName);

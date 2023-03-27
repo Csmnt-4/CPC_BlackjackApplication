@@ -9,10 +9,10 @@ public class ImageTableModel extends DefaultTableModel {
 
     private final List<ImageIcon> icons = new ArrayList<>();
 
-    public void add(ImageIcon image) {
+    public void add(ImageIcon image) throws Exception {
         icons.add(image);
-        this.addColumn(image.toString(), new ImageIcon[]{image});
-        fireTableDataChanged();
+        this.addColumn(image.toString(),
+                new ImageIcon[]{image});
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ImageTableModel extends DefaultTableModel {
         if (icons != null) {
             return icons.size();
         }
-        return 0;
+        return 1;
     }
 
     @Override

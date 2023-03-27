@@ -21,9 +21,10 @@ public class Player {
         }
     }
 
-    public void update(GameFrame game) {
+    public void update(GameFrame game) throws Exception{
         this.cardsValue = deck.getCardsSummary();
         if (user) {
+            game.getPlayerCardsTable().setMinimumSize(new Dimension(80 * (deck.getDeckSize()), 100));
             game.getPlayerCardsValueLabel().setText(Integer.toString(cardsValue));
             game.getPlayerBalanceValueLabel().setText(Integer.toString(balance));
             if (deck.getDeckSize() > 0) {
@@ -38,6 +39,7 @@ public class Player {
             boolean scoreIsVisible = true;
             game.getDealerBalanceValueLabel().setText(Integer.toString(balance));
             if (deck.getDeckSize() > 0) {
+                game.getDealerCardsTable().setMaximumSize(new Dimension(80 * (deck.getDeckSize()), 100));
                 game.getDealerTableModel().getIcons().clear();
                 for (Card dc : deck.getCards()) {
                     if (dc.isVisible()) {
@@ -53,7 +55,6 @@ public class Player {
                 } else {
                     game.getDealerCardsValueLabel().setText(cardsValue + " + ?");
                 }
-                game.getDealerCardsTable().setMaximumSize(new Dimension(80 * (deck.getDeckSize()), 100));
                 game.getDealerCardsTable().setModel(game.getDealerTableModel());
             }
         }
@@ -86,13 +87,13 @@ public class Player {
         }
     }
 
-    public void addCard (GameFrame game, Deck deck, int cardPosition) throws InterruptedException {
+    public void addCard(GameFrame game, Deck deck, int cardPosition) throws Exception {
         getDeck().addCard(deck, deck.getCards().get(cardPosition));
         update(game);
         Thread.sleep(500);
     }
 
-    public void addCard (GameFrame game, Deck deck, int cardPosition, boolean isCardOpen) throws InterruptedException {
+    public void addCard(GameFrame game, Deck deck, int cardPosition, boolean isCardOpen) throws Exception {
         getDeck().addCard(deck, deck.getCards().get(cardPosition), isCardOpen);
         update(game);
         Thread.sleep(500);
