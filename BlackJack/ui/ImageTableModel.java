@@ -1,22 +1,18 @@
 package ui;
 
-import entity.Card;
-import entity.Deck;
-
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import java.awt.image.BufferedImage;
+import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageTableModel extends AbstractTableModel {
+public class ImageTableModel extends DefaultTableModel {
 
-    private List<Icon> icons = new ArrayList<>();
-    private List<Card> cards = new ArrayList<>();
+    private List<ImageIcon> icons = new ArrayList<>();
 
     public void add(ImageIcon image) {
         icons.add(image);
-        fireTableRowsInserted(icons.size() - 1, icons.size() - 1);
+        this.addColumn(image.toString(), new ImageIcon[]{image});
+        fireTableDataChanged();
     }
 
     @Override
@@ -26,7 +22,10 @@ public class ImageTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return icons.size();
+        if (icons != null) {
+            return icons.size();
+        }
+        return 0;
     }
 
     @Override
@@ -36,26 +35,24 @@ public class ImageTableModel extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return Icon.class;
+        return ImageIcon.class;
     }
 
     @Override
     public String getColumnName(int column) {
         return "Card";
     }
-    public List<Icon> getIcons() {
+
+    public List<ImageIcon> getIcons() {
         return icons;
     }
 
-    public void setIcons(List<Icon> icons) {
+    public void setIcons(List<ImageIcon> icons) {
         this.icons = icons;
     }
 
-    public List<Card> getCards() {
-        return cards;
-    }
-
-    public void setCards(List<Card> cards) {
-        this.cards = cards;
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return false;
     }
 }

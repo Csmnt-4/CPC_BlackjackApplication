@@ -52,6 +52,7 @@ public class Card {
         } else {
             this.cardName = this.rankValue + " of " + this.suit;
         }
+        this.isVisible = true;
     }
 
     public String getCardName() {
@@ -64,7 +65,7 @@ public class Card {
 
     public void setCardName() {
         if (this.rank != null) {
-            this.cardName = this.rank.toString() + " of " + this.suit.toString();
+            this.cardName = this.rank + " of " + this.suit.toString();
         } else {
             this.cardName = this.rankValue + " of " + this.suit.toString();
 
@@ -151,7 +152,7 @@ public class Card {
     }
 
     public String getCardIconPath() {
-        String path = "C:\\Users\\csmnt\\IdeaProjects\\BlackJack\\resources\\card_" + suit.toString().toLowerCase() + "_";
+        String path = "card_" + suit.toString().toLowerCase() + "_";
         if (rankValue < 10) {
             path += "0" + rankValue;
         } else if (rankValue == 10) {

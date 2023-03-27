@@ -3,18 +3,16 @@ package ui;
 import entity.Deck;
 import manager.PlayerInteractionManager;
 
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.SoftBevelBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.Serial;
 import java.util.Enumeration;
-import javax.swing.*;
-import javax.swing.border.*;
 
 public class GameFrame extends JFrame {
-
-    /**
-     *
-     */
     @Serial
     private static final long serialVersionUID = -7277346550704819216L;
     private JPanel dealerPane;
@@ -57,13 +55,7 @@ public class GameFrame extends JFrame {
     private boolean hit;
     private boolean pass;
 
-    /**
-     * Launch the application.
-     */
-
-    public GameFrame() {
-        /* Create fields, buttons and tables. */
-//        setTitle("Blackjack");
+    public GameFrame() throws Exception {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 500, 345);
         setResizable(false);
@@ -86,9 +78,15 @@ public class GameFrame extends JFrame {
         manager.gameLoop(this);
     }
 
-    private void addCardToField() {
-        // TODO: Create options to add by name, add by adding the card, etc;
+    public static void changeAllFonts(Font font) {
+        Enumeration<Object> keys = UIManager.getDefaults().keys();
+        while (keys.hasMoreElements()) {
+            Object key = keys.nextElement();
+            Object value = UIManager.get(key);
+            if (value instanceof javax.swing.plaf.FontUIResource) UIManager.put(key, font);
+        }
     }
+
     private void initializeTablePane() {
         tablePanel = new JPanel();
         tablePanel.setBackground(new Color(0, 100, 0));
@@ -135,13 +133,12 @@ public class GameFrame extends JFrame {
         JTable table = new JTable(model);
 
         table.setDefaultRenderer(BufferedImage.class, new ImageRenderer());
-        table.setBackground(new Color(0, 100, 0));
         table.setRowHeight(100);
-        table.setMaximumSize(new Dimension(0, 100)); //TODO: Add to the addCard function
-        table.setColumnSelectionAllowed(false);
-        table.setCellSelectionEnabled(false);
+        table.setBackground(new Color(0, 100, 0));
         table.setShowVerticalLines(false);
         table.setShowHorizontalLines(false);
+        table.setFocusable(false);
+        table.setRowSelectionAllowed(false);
         table.setVisible(true);
 
         return table;
@@ -237,23 +234,9 @@ public class GameFrame extends JFrame {
 
     private JPanel initializePane() {
         JPanel panel = new JPanel();
-        panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED,
-                null,
-                null,
-                null,
-                null));
+        panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
         panel.setLayout(new FlowLayout(FlowLayout.CENTER));
         return panel;
-    }
-
-    public static void changeAllFonts(Font font) {
-        Enumeration<Object> keys = UIManager.getDefaults().keys();
-        while (keys.hasMoreElements()) {
-            Object key = keys.nextElement();
-            Object value = UIManager.get(key);
-            if (value instanceof javax.swing.plaf.FontUIResource)
-                UIManager.put(key, font);
-        }
     }
 
     public JPanel getDealerPane() {
@@ -489,14 +472,12 @@ public class GameFrame extends JFrame {
     }
 
     public void setInvisibleCardToTable(Deck deck) {
-        this.getPlayerTableModel().getCards().add(deck.getCards().get(0));
         this.getPlayerTableModel().add(deck.getCardIcon(deck.getCards().get(0).getCardName()));
         this.getPlayerCardsTable().setModel(this.getPlayerTableModel());
-        this.getPlayerCardsTable().setMaximumSize(new Dimension(0,100));
+        this.getPlayerCardsTable().setMaximumSize(new Dimension(0, 100));
 
-        this.getDealerTableModel().getCards().add(deck.getCards().get(0));
         this.getDealerTableModel().add(deck.getCardIcon(deck.getCards().get(0).getCardName()));
         this.getDealerCardsTable().setModel(this.getDealerTableModel());
-        this.getDealerCardsTable().setMaximumSize(new Dimension(0,100));
+        this.getDealerCardsTable().setMaximumSize(new Dimension(0, 100));
     }
 }
