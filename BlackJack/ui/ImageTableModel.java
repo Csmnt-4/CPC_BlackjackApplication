@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ImageTableModel extends DefaultTableModel {
 
-    private List<ImageIcon> icons = new ArrayList<>();
+    private final List<ImageIcon> icons = new ArrayList<>();
 
     public void add(ImageIcon image) {
         icons.add(image);
@@ -45,10 +45,6 @@ public class ImageTableModel extends DefaultTableModel {
 
     public List<ImageIcon> getIcons() {
         return icons;
-    }
-
-    public void setIcons(List<ImageIcon> icons) {
-        this.icons = icons;
     }
 
     @Override

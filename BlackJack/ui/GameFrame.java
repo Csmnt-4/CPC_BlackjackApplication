@@ -15,49 +15,36 @@ import java.util.Enumeration;
 public class GameFrame extends JFrame {
     @Serial
     private static final long serialVersionUID = -7277346550704819216L;
-    private JPanel dealerPane;
+    private final ImageTableModel dealerTableModel = new ImageTableModel();
+    private final ImageTableModel playerTableModel = new ImageTableModel();
     private JPanel dealerBalancePane;
-    private JLabel dealerBalanceLabel;
     private JLabel dealerBalanceValueLabel;
-
-    private JPanel dealerCardsValuePane;
-    private JLabel dealerCardsLabel;
     private JLabel dealerCardsValueLabel;
-
-    private JPanel tablePanel;
     private JTable dealerCardsTable;
-    private ImageTableModel dealerTableModel = new ImageTableModel();
     private JLabel tableBetLabel;
     private JTable playerCardsTable;
-    private ImageTableModel playerTableModel = new ImageTableModel();
-
-    private JPanel playerPanel;
 
 
     private JPanel playerBalancePane;
 
-    private JLabel playerBalanceLabel;
     private JLabel playerBalanceValueLabel;
 
-    private JPanel playerBetPane;
     private JTextField playerBetTextField;
     private JButton playerBetButton;
 
-    private JPanel hitOrPassPane;
     private JButton hitButton;
-    private JButton passButton;
+    private JButton standButton;
 
-    private JPanel playerCardsValuePane;
-    private JLabel playerCardsLabel;
     private JLabel playerCardsValueLabel;
 
     private boolean bet;
     private boolean hit;
     private boolean pass;
 
-    public GameFrame() throws Exception {
+    public GameFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 500, 345);
+        setBounds(100, 100, 550, 350);
+        setLocation(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - 550 / 2, Toolkit.getDefaultToolkit().getScreenSize().height / 2 - 350 / 2);
         setResizable(false);
         getContentPane().setLayout(new BorderLayout());
 
@@ -65,17 +52,16 @@ public class GameFrame extends JFrame {
         initializePlayerPane();
         initializeDealerPane();
 
-        PlayerInteractionManager manager = null;
         try {
-            manager = new PlayerInteractionManager();
+            PlayerInteractionManager manager = new PlayerInteractionManager();
+
+            setAlwaysOnTop(true);
+            setVisible(true);
+
+            manager.gameLoop(this);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        setAlwaysOnTop(true);
-        setVisible(true);
-
-        manager.gameLoop(this);
     }
 
     public static void changeAllFonts(Font font) {
@@ -88,13 +74,13 @@ public class GameFrame extends JFrame {
     }
 
     private void initializeTablePane() {
-        tablePanel = new JPanel();
+        JPanel tablePanel = new JPanel();
         tablePanel.setBackground(new Color(0, 100, 0));
         tablePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
         getContentPane().add(tablePanel, BorderLayout.CENTER);
 
-        dealerCardsTable = initializeTable(dealerTableModel);
+        dealerCardsTable = initializeTable();
         tablePanel.add(dealerCardsTable);
 
         JSeparator upperTableSeparator = new JSeparator();
@@ -115,12 +101,12 @@ public class GameFrame extends JFrame {
         lowerTableSeparator.setForeground(new Color(169, 169, 169));
         tablePanel.add(lowerTableSeparator);
 
-        playerCardsTable = initializeTable(playerTableModel);
+        playerCardsTable = initializeTable();
         tablePanel.add(playerCardsTable);
     }
 
-    private JTable initializeTable(ImageTableModel model) {
-        model = new ImageTableModel() {
+    private JTable initializeTable() {
+        ImageTableModel model = new ImageTableModel() {
             @Override
             public Class<?> getColumnClass(int column) {
                 if (getRowCount() > 0) {
@@ -145,7 +131,7 @@ public class GameFrame extends JFrame {
     }
 
     private void initializePlayerPane() {
-        playerPanel = new JPanel();
+        JPanel playerPanel = new JPanel();
         FlowLayout fl_playerPane = new FlowLayout(FlowLayout.CENTER);
         playerPanel.setLayout(fl_playerPane);
         getContentPane().add(playerPanel, BorderLayout.SOUTH);
@@ -153,14 +139,14 @@ public class GameFrame extends JFrame {
         playerBalancePane = initializePane();
         playerPanel.add(playerBalancePane);
 
-        playerBalanceLabel = new JLabel("Balance:");
+        JLabel playerBalanceLabel = new JLabel("Balance:");
         playerBalanceLabel.setHorizontalAlignment(SwingConstants.LEFT);
         playerBalancePane.add(playerBalanceLabel);
 
         playerBalanceValueLabel = new JLabel("0");
         playerBalancePane.add(playerBalanceValueLabel);
 
-        playerBetPane = new JPanel();
+        JPanel playerBetPane = new JPanel();
         playerPanel.add(playerBetPane);
         playerBetPane.setLayout(new FlowLayout(FlowLayout.CENTER));
 
@@ -170,36 +156,30 @@ public class GameFrame extends JFrame {
 
         playerBetButton = new JButton("Bet");
         playerBetButton.setHorizontalAlignment(SwingConstants.LEFT);
-        playerBetButton.addActionListener(e -> {
-            setBet(true);
-        });
+        playerBetButton.addActionListener(e -> setBet(true));
         playerBetPane.add(playerBetButton);
 
-        hitOrPassPane = new JPanel();
+        JPanel hitOrPassPane = new JPanel();
         playerPanel.add(hitOrPassPane);
         hitOrPassPane.setLayout(new FlowLayout(FlowLayout.CENTER));
         hitButton = new JButton("Hit");
-        hitButton.addActionListener(e -> {
-            setHit(true);
-        });
+        hitButton.addActionListener(e -> setHit(true));
         hitButton.setEnabled(false);
         hitButton.setHorizontalAlignment(SwingConstants.LEADING);
         hitButton.setActionCommand("OK");
         hitOrPassPane.add(hitButton);
 
-        passButton = new JButton("Pass");
-        hitOrPassPane.add(passButton);
-        passButton.setHorizontalAlignment(SwingConstants.LEFT);
-        passButton.setActionCommand("Cancel");
-        passButton.addActionListener(e -> {
-            setPass(true);
-        });
-        passButton.setEnabled(false);
+        standButton = new JButton("Stand");
+        hitOrPassPane.add(standButton);
+        standButton.setHorizontalAlignment(SwingConstants.LEFT);
+        standButton.setActionCommand("Cancel");
+        standButton.addActionListener(e -> setPass(true));
+        standButton.setEnabled(false);
 
-        playerCardsValuePane = initializePane();
+        JPanel playerCardsValuePane = initializePane();
         playerPanel.add(playerCardsValuePane);
 
-        playerCardsLabel = new JLabel("Cards value:");
+        JLabel playerCardsLabel = new JLabel("Cards value:");
         playerCardsLabel.setHorizontalAlignment(SwingConstants.LEFT);
         playerCardsValuePane.add(playerCardsLabel);
 
@@ -208,23 +188,23 @@ public class GameFrame extends JFrame {
     }
 
     private void initializeDealerPane() {
-        dealerPane = new JPanel();
+        JPanel dealerPane = new JPanel();
         getContentPane().add(dealerPane, BorderLayout.NORTH);
 
         dealerBalancePane = initializePane();
         dealerPane.add(dealerBalancePane);
 
-        dealerBalanceLabel = new JLabel("Balance:");
+        JLabel dealerBalanceLabel = new JLabel("Balance:");
         dealerBalanceLabel.setHorizontalAlignment(SwingConstants.LEFT);
         dealerBalancePane.add(dealerBalanceLabel);
 
         dealerBalanceValueLabel = new JLabel("0");
         dealerBalancePane.add(dealerBalanceValueLabel);
 
-        dealerCardsValuePane = initializePane();
+        JPanel dealerCardsValuePane = initializePane();
         dealerPane.add(dealerCardsValuePane);
 
-        dealerCardsLabel = new JLabel("Cards value:");
+        JLabel dealerCardsLabel = new JLabel("Cards value:");
         dealerCardsLabel.setHorizontalAlignment(SwingConstants.LEFT);
         dealerCardsValuePane.add(dealerCardsLabel);
 
@@ -239,212 +219,64 @@ public class GameFrame extends JFrame {
         return panel;
     }
 
-    public JPanel getDealerPane() {
-        return dealerPane;
-    }
-
-    public void setDealerPane(JPanel dealerPane) {
-        this.dealerPane = dealerPane;
-    }
-
     public JPanel getDealerBalancePane() {
         return dealerBalancePane;
-    }
-
-    public void setDealerBalancePane(JPanel dealerBalancePane) {
-        this.dealerBalancePane = dealerBalancePane;
-    }
-
-    public JLabel getDealerBalanceLabel() {
-        return dealerBalanceLabel;
-    }
-
-    public void setDealerBalanceLabel(JLabel dealerBalanceLabel) {
-        this.dealerBalanceLabel = dealerBalanceLabel;
     }
 
     public JLabel getDealerBalanceValueLabel() {
         return dealerBalanceValueLabel;
     }
 
-    public void setDealerBalanceValueLabel(JLabel dealerBalanceValueLabel) {
-        this.dealerBalanceValueLabel = dealerBalanceValueLabel;
-    }
-
-    public JPanel getDealerCardsValuePane() {
-        return dealerCardsValuePane;
-    }
-
-    public void setDealerCardsValuePane(JPanel dealerCardsValuePane) {
-        this.dealerCardsValuePane = dealerCardsValuePane;
-    }
-
-    public JLabel getDealerCardsLabel() {
-        return dealerCardsLabel;
-    }
-
-    public void setDealerCardsLabel(JLabel dealerCardsLabel) {
-        this.dealerCardsLabel = dealerCardsLabel;
-    }
-
     public JLabel getDealerCardsValueLabel() {
         return dealerCardsValueLabel;
-    }
-
-    public void setDealerCardsValueLabel(JLabel dealerCardsValueLabel) {
-        this.dealerCardsValueLabel = dealerCardsValueLabel;
-    }
-
-    public JPanel getTablePanel() {
-        return tablePanel;
-    }
-
-    public void setTablePanel(JPanel tablePanel) {
-        this.tablePanel = tablePanel;
     }
 
     public JTable getDealerCardsTable() {
         return dealerCardsTable;
     }
 
-    public void setDealerCardsTable(JTable dealerCardsTable) {
-        this.dealerCardsTable = dealerCardsTable;
-    }
-
     public JLabel getTableBetLabel() {
         return tableBetLabel;
-    }
-
-    public void setTableBetLabel(JLabel tableBetLabel) {
-        this.tableBetLabel = tableBetLabel;
     }
 
     public JTable getPlayerCardsTable() {
         return playerCardsTable;
     }
 
-    public void setPlayerCardsTable(JTable playerCardsTable) {
-        this.playerCardsTable = playerCardsTable;
-    }
-
     public ImageTableModel getDealerTableModel() {
         return dealerTableModel;
-    }
-
-    public void setDealerTableModel(ImageTableModel dealerTableModel) {
-        this.dealerTableModel = dealerTableModel;
     }
 
     public ImageTableModel getPlayerTableModel() {
         return playerTableModel;
     }
 
-    public void setPlayerTableModel(ImageTableModel playerTableModel) {
-        this.playerTableModel = playerTableModel;
-    }
-
-    public JPanel getPlayerPanel() {
-        return playerPanel;
-    }
-
-    public void setPlayerPanel(JPanel playerPanel) {
-        this.playerPanel = playerPanel;
-    }
-
-    public JLabel getPlayerBalanceLabel() {
-        return playerBalanceLabel;
-    }
-
-    public void setPlayerBalanceLabel(JLabel playerBalanceLabel) {
-        this.playerBalanceLabel = playerBalanceLabel;
-    }
-
     public JLabel getPlayerBalanceValueLabel() {
         return playerBalanceValueLabel;
-    }
-
-    public void setPlayerBalanceValueLabel(JLabel playerBalanceValueLabel) {
-        this.playerBalanceValueLabel = playerBalanceValueLabel;
     }
 
     public JPanel getPlayerBalancePane() {
         return playerBalancePane;
     }
 
-    public void setPlayerBalancePane(JPanel playerBalancePane) {
-        this.playerBalancePane = playerBalancePane;
-    }
-
-    public JPanel getPlayerBetPane() {
-        return playerBetPane;
-    }
-
-    public void setPlayerBetPane(JPanel playerBetPane) {
-        this.playerBetPane = playerBetPane;
-    }
-
     public JTextField getPlayerBetTextField() {
         return playerBetTextField;
-    }
-
-    public void setPlayerBetTextField(JTextField playerBetTextField) {
-        this.playerBetTextField = playerBetTextField;
     }
 
     public JButton getPlayerBetButton() {
         return playerBetButton;
     }
 
-    public void setPlayerBetButton(JButton playerBetButton) {
-        this.playerBetButton = playerBetButton;
-    }
-
-    public JPanel getHitOrPassPane() {
-        return hitOrPassPane;
-    }
-
-    public void setHitOrPassPane(JPanel hitOrPassPane) {
-        this.hitOrPassPane = hitOrPassPane;
-    }
-
     public JButton getHitButton() {
         return hitButton;
     }
 
-    public void setHitButton(JButton hitButton) {
-        this.hitButton = hitButton;
-    }
-
-    public JButton getPassButton() {
-        return passButton;
-    }
-
-    public void setPassButton(JButton passButton) {
-        this.passButton = passButton;
-    }
-
-    public JPanel getPlayerCardsValuePane() {
-        return playerCardsValuePane;
-    }
-
-    public void setPlayerCardsValuePane(JPanel playerCardsValuePane) {
-        this.playerCardsValuePane = playerCardsValuePane;
-    }
-
-    public JLabel getPlayerCardsLabel() {
-        return playerCardsLabel;
-    }
-
-    public void setPlayerCardsLabel(JLabel playerCardsLabel) {
-        this.playerCardsLabel = playerCardsLabel;
+    public JButton getStandButton() {
+        return standButton;
     }
 
     public JLabel getPlayerCardsValueLabel() {
         return playerCardsValueLabel;
-    }
-
-    public void setPlayerCardsValueLabel(JLabel playerCardsValueLabel) {
-        this.playerCardsValueLabel = playerCardsValueLabel;
     }
 
     public boolean isBet() {

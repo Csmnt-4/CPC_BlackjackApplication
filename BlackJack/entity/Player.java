@@ -5,7 +5,7 @@ import ui.GameFrame;
 import java.awt.*;
 
 public class Player {
-    private boolean user;
+    private final boolean user;
     private int balance;
     private int cardsValue;
     private Deck deck;
@@ -31,8 +31,8 @@ public class Player {
                 for (Card dc : deck.getCards()) {
                     game.getPlayerTableModel().add(deck.getCardIcon(dc));
                 }
-                game.getPlayerCardsTable().setModel(game.getPlayerTableModel());
                 game.getPlayerCardsTable().setMaximumSize(new Dimension(80 * (deck.getDeckSize()), 100));
+                game.getPlayerCardsTable().setModel(game.getPlayerTableModel());
             }
         } else {
             boolean scoreIsVisible = true;
@@ -53,18 +53,10 @@ public class Player {
                 } else {
                     game.getDealerCardsValueLabel().setText(cardsValue + " + ?");
                 }
-                game.getDealerCardsTable().setModel(game.getDealerTableModel());
                 game.getDealerCardsTable().setMaximumSize(new Dimension(80 * (deck.getDeckSize()), 100));
+                game.getDealerCardsTable().setModel(game.getDealerTableModel());
             }
         }
-    }
-
-    public boolean isUser() {
-        return user;
-    }
-
-    public void setUser(boolean user) {
-        this.user = user;
     }
 
     public int getBalance() {
@@ -76,11 +68,8 @@ public class Player {
     }
 
     public int getCardsValue() {
+        this.cardsValue = deck.getCardsSummary();
         return cardsValue;
-    }
-
-    public void setCardsValue(int cardsValue) {
-        this.cardsValue = cardsValue;
     }
 
     public Deck getDeck() {

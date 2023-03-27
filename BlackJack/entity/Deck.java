@@ -3,22 +3,17 @@ package entity;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 import java.util.*;
 
 public class Deck {
-    private List<Card> cards;
-    private Map<String, ImageIcon> cardIconsMap;
-
-    public Deck(List<Card> cards) {
-        this.cards = cards;
-    }
+    private final List<Card> cards;
+    private final Map<String, ImageIcon> cardIconsMap;
 
     public Deck() throws Exception {
         this.cards = new ArrayList<>();
-        this.cardIconsMap = new HashMap<String, ImageIcon>();
+        this.cardIconsMap = new HashMap<>();
         for (int i = 0; i < 4; i++) {
             for (int j = 2; j < 15; j++) {
                 Card card = new Card(i, j);
@@ -29,26 +24,14 @@ public class Deck {
         this.cardIconsMap.put("Back", new ImageIcon(ImageIO.read(this.getFileFromResourceAsStream("card_back.png")).getScaledInstance(100, 100, Image.SCALE_DEFAULT)));
     }
 
-    public Deck(boolean b) throws Exception {
+    public Deck(boolean ignoredBoolean) throws Exception {
         this.cards = new ArrayList<>();
-        this.cardIconsMap = new HashMap<String, ImageIcon>();
+        this.cardIconsMap = new HashMap<>();
         this.cardIconsMap.put("Back", new ImageIcon(ImageIO.read(this.getFileFromResourceAsStream("card_back.png")).getScaledInstance(100, 100, Image.SCALE_DEFAULT)));
-    }
-
-    public Map<String, ImageIcon> getCardIconsMap() {
-        return cardIconsMap;
-    }
-
-    public void setCardIconsMap(Map<String, ImageIcon> cardIconsMap) {
-        this.cardIconsMap = cardIconsMap;
     }
 
     public List<Card> getCards() {
         return cards;
-    }
-
-    public void setCards(List<Card> cards) {
-        this.cards = cards;
     }
 
     public void addCard(Deck deck, Card card) {
@@ -93,15 +76,12 @@ public class Deck {
         return cardIconsMap.get(cardName);
     }
     private InputStream getFileFromResourceAsStream(String fileName) {
-
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(fileName);
-
         if (inputStream == null) {
-            throw new IllegalArgumentException("file not found! " + fileName);
+            throw new IllegalArgumentException("Resource not found! " + fileName);
         } else {
             return inputStream;
         }
-
     }
 }
