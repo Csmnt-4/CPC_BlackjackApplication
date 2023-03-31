@@ -5,6 +5,14 @@ import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.List;
 
+/** ImageTableModel class is used to store and display cards. Due to the specifics of a game table,
+ * the rows are not being rendered, giving the table a "horizontal view" look. Due to irritating
+ * behaviour of cell editor/selector, isCellEditable() override was made, additional functions are
+ * disabled while creating an instance of ImageTableModel in the GameFrame class function initializeTable().
+ *
+ * @since 3/23/2023
+ * @author Victor Anisimov
+ */
 public class ImageTableModel extends DefaultTableModel {
 
     private final List<ImageIcon> icons = new ArrayList<>();

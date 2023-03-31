@@ -4,14 +4,20 @@ import entity.Deck;
 import manager.PlayerInteractionManager;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.*;
 import javax.swing.border.SoftBevelBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.Serial;
 import java.util.Enumeration;
 
+/** GameFrame class is used to create a GUI. Sets all field sizes and bounds (non-adjustable),
+ * close on press of "close" button default behaviour, gets user screen dimensions, sets
+ * the window in the center of it and finally runs the main loop.
+ *
+ * @since 3/23/2023
+ * @author Victor Anisimov
+ */
 public class GameFrame extends JFrame {
     @Serial
     private static final long serialVersionUID = -7277346550704819216L;
@@ -41,9 +47,9 @@ public class GameFrame extends JFrame {
     private boolean hit;
     private boolean pass;
 
-    public GameFrame() throws Exception {
+    public GameFrame(boolean useDefaultGameRules) throws Exception {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 550, 350);
+        setBounds(100, 100, 650, 350);
         setLocation(Toolkit.getDefaultToolkit().getScreenSize().width / 2 - 550 / 2, Toolkit.getDefaultToolkit().getScreenSize().height / 2 - 350 / 2);
         setResizable(false);
         getContentPane().setLayout(new BorderLayout());
@@ -53,7 +59,7 @@ public class GameFrame extends JFrame {
         initializeDealerPane();
 
         try {
-            PlayerInteractionManager manager = new PlayerInteractionManager();
+            PlayerInteractionManager manager = new PlayerInteractionManager(useDefaultGameRules);
 
             setAlwaysOnTop(true);
             setVisible(true);
@@ -141,6 +147,7 @@ public class GameFrame extends JFrame {
 
         JLabel playerBalanceLabel = new JLabel("Balance:");
         playerBalanceLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        playerBalanceLabel.setPreferredSize(new Dimension(60,15));
         playerBalancePane.add(playerBalanceLabel);
 
         playerBalanceValueLabel = new JLabel("0");
@@ -201,6 +208,7 @@ public class GameFrame extends JFrame {
 
         JLabel dealerBalanceLabel = new JLabel("Balance:");
         dealerBalanceLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        dealerBalanceLabel.setPreferredSize(new Dimension(60,15));
         dealerBalancePane.add(dealerBalanceLabel);
 
         dealerBalanceValueLabel = new JLabel("0");
@@ -242,9 +250,6 @@ public class GameFrame extends JFrame {
         return dealerCardsTable;
     }
 
-    public JLabel getTableBetLabel() {
-        return tableBetLabel;
-    }
 
     public JTable getPlayerCardsTable() {
         return playerCardsTable;
@@ -270,16 +275,11 @@ public class GameFrame extends JFrame {
         return playerBetTextField;
     }
 
-    public JButton getPlayerBetButton() {
-        return playerBetButton;
-    }
 
-    public JButton getHitButton() {
-        return hitButton;
-    }
-
-    public JButton getStandButton() {
-        return standButton;
+    public void setGameButtons(boolean enableHitStandButtons) {
+        playerBetButton.setEnabled(!enableHitStandButtons);
+        standButton.setEnabled(enableHitStandButtons);
+        hitButton.setEnabled(enableHitStandButtons);
     }
 
     public JLabel getPlayerCardsValueLabel() {
@@ -318,5 +318,8 @@ public class GameFrame extends JFrame {
         this.getDealerTableModel().add(deck.getCardIcon(deck.getCards().get(0).getCardName()));
         this.getDealerCardsTable().setModel(this.getDealerTableModel());
         this.getDealerCardsTable().setMaximumSize(new Dimension(0, 100));
+    }
+    public void setTableBetLabelText(String text) {
+        tableBetLabel.setText(text);
     }
 }

@@ -5,7 +5,13 @@ import java.util.Objects;
 enum Suit {Clubs, Diamonds, Hearts, Spades}
 
 enum Rank {Jack, Queen, King, Ace}
-
+/** Card class is used to store the cards' information, such as rank, value and suit.
+ * You can also get a proper formatted cards' name, which I may try and add in the tooltip later on.
+ * Card is being created based off suit (1-4) and value (2-14), value is set automatically.
+ *
+ * @since 3/23/2023
+ * @author Victor Anisimov
+ */
 public class Card {
     private final String cardName;
     private final int rankValue;

@@ -7,6 +7,18 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.*;
 
+/** Deck class is used to store the cards and their images in a hashmap with a card's name as a key.
+ * The summary of the cards when having an ace or multiple instances of an ace is decided on whether
+ * the total sum is over 21 or not.
+ * The class is pretty simple and reliable, except when loading the pictures from the resource folder.
+ * For this reason, on creation we additionally try to open the image both specifically in the "resources"
+ * folder and the folder user may have specified as a "resources" folder.
+ * All credit for cards belong to www.kenney.nl
+ * Funny enough, the Artist states that the credit is not mandatory.
+ *
+ * @since 3/23/2023
+ * @author Victor Anisimov
+ */
 public class Deck {
     private final List<Card> cards;
     private final Map<String, ImageIcon> cardIconsMap;
@@ -80,9 +92,16 @@ public class Deck {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(fileName);
         if (inputStream == null) {
-            throw new IllegalArgumentException("Resource not found! " + fileName);
+            inputStream = classLoader.getResourceAsStream("resources/" + fileName);
+            if (inputStream == null) {
+                throw new IllegalArgumentException("Resource not found! " + fileName);
+            } else {
+                return inputStream;
+            }
         } else {
             return inputStream;
         }
     }
 }
+
+
