@@ -42,7 +42,7 @@ public class BlackJackApplication {
             // Setting the unified Windows LookAndFeel for the GUI.
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             // Setting a single font for all the text in every component available.
-            GameFrame.changeAllFonts(new FontUIResource("Cascadia mono", Font.TRUETYPE_FONT, 12));
+            GameFrame.changeAllFonts(new FontUIResource("Minecraft", Font.TRUETYPE_FONT, 12));
             // Creating a new object of GameFrame class, which, due to being
             //  an extension to JFrame class, allows us to create a new window.
             new GameFrame(false);
